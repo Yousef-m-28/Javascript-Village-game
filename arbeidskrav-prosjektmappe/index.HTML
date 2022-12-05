@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landsbysimulator 2022</title>
+    <!-- Du trenger ikke gjøre noe med CSS-koden! -->
+    <link rel="stylesheet" href="css-skal-ikke-roeres/index.css">
+</head>
+<body>
+
+    <div id="container">     
+        
+        <div id="info-div">
+            <div id="life-bar-box">
+                <p id="life-bar">300HP</p><!-- Dette er selve livet (grønne baren). -->
+            </div>
+
+            <!-- Denne p-tagen inneholder informasjon om hvor mye tre og metall man har. -->
+            <p id="material-info">WOOD: 0. IRON: 0. BUILDINGS: 0. STRENGTH: 0.</p>
+        </div>
+
+
+        <!-- Knappemenyen -->
+        <div id="button-menu">
+            <button id="buy-building-1-btn"><img src="images/building-1.png"><p>BUY SMALL BUILDING (50 WOOD, 10 IRON)</p></button> 
+            <button id="buy-building-2-btn"><img src="images/building-3.png"><p>BUY LARGE BUILDING (150 WOOD, 30 IRON)</p></button>            
+            <button id="buy-sword-btn"><img id="sword" src="images/sword.png"><p>BUY SWORD (200 IRON)</p></button>
+        </div>        
+
+        <img id="warrior-1" src="images/warrior.png">
+
+        <!-- Her legger man til bilder av bygninger. -->
+        <div id="building-div"></div>    
+
+
+        <!-- Her legger man til monstre (cute-wolfman.png). -->
+        <div id="monster-div"></div>
+
+
+        <!-- Denne metallgruven skal man kunne klikke på for å få metall -->
+        <img id="metal-mine" src="images/metal-mine.png">
+
+
+        <!-- Disse trærne skal man kunne klikke på for å få treverk for å bygge hus. -->                
+        <img id="tree-3" src="images/tree.png" alt="">
+        <img id="tree-2" src="images/tree.png" alt="">
+        <img id="tree-1" src="images/tree.png" alt="">
+
+    </div><!-- end container-->
+
+
+    <!-- Her skrives det ut informasjon om hva brukeren gjør og hva som skjer. -->
+    <div id="output-div">
+        <p>
+            Begin creating your world by mining materials!
+        </p>
+    </div>
+    <script>
+//henter HTML elementer//
+var tree1 = document.getElementById("tree-1");
+var tree2 = document.getElementById("tree-2");
+var tree3 = document.getElementById("tree-3");
+var mine = document.getElementById("metal-mine");
+var buySmallBuilding = document.getElementById("buy-building-1-btn");
+var buyLargeBuilding = document.getElementById("buy-building-2-btn");
+var buySword = document.getElementById("buy-sword-btn");
+var canvas = document.getElementById("container");
+
+var materialInfo = document.getElementById("material-info");
+var healthbar = document.getElementById("life-bar");
+var materialInfo = document.getElementById("material-info");
+var buildingDiv = document.getElementById("building-div");
+var monsterDiv = document.getElementById("monster-div");
+var outputDiv = document.getElementById("output-div");
+
+//variabler//
+var tree1ClickCount = 0;
+var tree2ClickCount = 0;
+var tree3ClickCount = 0;
+var obtainWood = 0;
+var ironCount = 0;
+var buildingCount = 0;
+
+var damage = 10;
+var healthDepletion = 0;
+var HP = 300;
+
+var output = [];
+
+var monsterCount = 0;
+var monsterHealth = 0;
+
+//spill-funksjoner og klikk-funksjoner//
+tree1.onclick = function () {
+    if(HP>0 && buildingCount<10){
+        tree1ClickCount += 1;
+        clickTree();
+    }
+};
+
+tree2.onclick = function () {
+    if(HP>0 && buildingCount<10){
+        tree2ClickCount += 1;
+        clickTree();
+    }
+};
+
+tree3.onclick = function () {
+    if(HP>0 && buildingCount<10){
+        tree3ClickCount += 1;
+        clickTree();
+    }
+};
+
+mine.onclick = function () {
+    if(HP>0 && buildingCount<10){
+        metallSpawn();
+    }
+};
+
+buySmallBuilding.onclick = function(){
+    if(HP>0 && buildingCount<10){
+        spawnSmallBuilding();
+    } 
+}
+
+buyLargeBuilding.onclick = function(){
+    if(HP>0 && buildingCount<10){
+        spawnLargeBuilding();
+    } 
+}
+
+buySword.onclick = function(){
+    if(HP>0 && buildingCount<10){
+        spawnSword();
+    }   
+}
+
+monsterDiv.onclick = function(){
+    if(HP>0 && buildingCount<10){
+        attack();
+    }
+}
+
+function Update(){
+    materialInfo.innerHTML = `WOOD: ${obtainWood}. IRON: ${ironCount}. BUILDINGS: ${buildingCount}. STRENGTH: ${damage}`;
+        if(buildingCount == 10){
+        alert(`YOU'VE WON!`);
+        logg();
+        
+    }
+}
+
+function logg(){
+    outputDiv.innerHTML ="";
+        for (i = output.length; i > 0; i--) {
+         outputDiv.innerHTML += `${output[i - 1]}`;
+          }
+}
+
+function clickTree(){
+    obtainWood += 25;
+    output.push(`<p>YOU HAVE GAINED +25 WOOD </p>`);
+logg();
+monsterTime();
+Update();
+spawnMonster();
+    if(tree1ClickCount > 10){
+        tree1.style.display = "none";
+        }
+        if(tree2ClickCount > 10){
+            tree2.style.display = "none";
+            }
+            if(tree3ClickCount > 10){
+             tree3.style.display = "none";
+             }
+
+}
+function metallSpawn(){
+ironCount += 10;
+output.push(`<p>YOU HAVE GAINED +10 IRON</p>`);
+logg();
+monsterTime();
+spawnMonster();
+Update();
+}
+
+function clickTree(){
+obtainWood += 25;
+output.push(`<p>YOU HAVE GAINED +25 WOOD </p>`);
+logg();
+monsterTime();
+Update();
+spawnMonster();
+    if(tree1ClickCount > 10){
+        tree1.style.display = "none";
+        }
+        if(tree2ClickCount > 10){
+            tree2.style.display = "none";
+            }
+            if(tree3ClickCount > 10){
+                tree3.style.display = "none";
+                }
+}
+
+function spawnSmallBuilding(){
+    if(obtainWood >= 50 && ironCount >= 10){
+        output.push(`<p>SMALL HOUSE ACQUIRED</p>`);
+        logg();
+        obtainWood -= 50;
+        ironCount -= 10;
+        buildingCount += 1;
+        Update();
+        buildingDiv.innerHTML += `<img src="images/building-1.png">`;
+    }else{
+        alert(`NOT ENOUGH RESOURCES`);
+    }
+}
+
+function spawnLargeBuilding(){
+    if(obtainWood >= 150 && ironCount >= 30){
+        output.push(`<p>LARGE HOUSE ACQUIRED</p>`);
+        logg();
+        obtainWood -= 150;
+        ironCount -= 30;
+        buildingCount += 1;
+        Update();
+        buildingDiv.innerHTML += `<img src="images/building-3.png">`;
+    }else{
+        alert(`NOT ENOUGH RESOURCES`);
+    }
+}
+function spawnSword(){
+    if(ironCount >= 200){
+        output.push(`<p>FORGED SWORD + 40 STRENGTH</p>`);
+        logg();
+        damage += 40;
+        ironCount -= 200;
+        Update();
+    }else{
+        alert(`NOT ENOUGH RESOURCES`);
+    }
+}
+
+function spawnMonster(){
+    oneOfThreeChance = (Math.floor(Math.random() * 10) + 1);
+    if(oneOfThreeChance >9){
+        spawningMonster = (Math.floor(Math.random() * 3) + 1);
+        for (let index = 0; index < spawningMonster; index++) {
+            monsterCount += 1;
+            monsterHealth = monsterCount * 40
+            monsterDiv.innerHTML += `<img src="images/cute-wolfman.png">`;
+        }
+    }
+}
+
+function killMonster(){
+    output.push(`<p>BEAST HAS BEEN SLAIN!</p>`);
+    logg();
+    if(damage >= 10 && damage <= 40){
+        monsterCount -=1;
+    }else{
+        monsterCount -= damage/40;
+    }
+    
+    monsterDiv.innerHTML = "";
+    for (let index = 0; index < monsterCount; index++) {
+        monsterDiv.innerHTML += `<img src="images/cute-wolfman.png">`;
+    }
+}
+
+function attack(){
+    monsterTime();
+    output.push(`<p>BEAST WAS ATTACKED! -4 HP</p>`);
+    logg();
+    monsterHealth -= damage;
+    healthDepletion += damage;
+    if(healthDepletion >= 40){
+        healthDepletion = 0;
+        var left = monsterHealth/monsterCount;
+        if(left < 40){
+            killMonster();
+        }
+    }  
+}
+
+function monsterTime(){
+    HP=HP-3*monsterCount;
+    healthbar.innerHTML = `${HP}HP`;
+    let pixles = HP+"px";
+    document.getElementById("life-bar").style.width = pixles;
+    if(HP<=0){
+        healthbar.innerHTML = `0HP`;
+        HP = 0;
+        document.getElementById("life-bar").style.width = "0px";
+        if(HP <= 0){
+            output.push(`<p>GAME OVER!</p>`);
+            logg();
+        }
+    }
+}
+
+    </script>
+</body>
+</html>
